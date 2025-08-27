@@ -2,7 +2,7 @@
 
 This is a real-time virtual try-on application that uses a webcam to place digital glasses onto a user's face. The system is built with Python, using **Flask** for the backend and **OpenCV** for computer vision. The frontend is a simple web interface with **HTML, CSS, and JavaScript**.
 
-## Architecture 🧠
+## Architecture
 
 The application follows a **client-server architecture**.
 
@@ -20,12 +20,13 @@ The system's functionality is divided between the frontend and the backend to en
     * **Streaming**: The processed frame is encoded as a JPEG image and sent back to the browser in a continuous stream.
 3.  **Glasses Selection**: The frontend displays a gallery of glasses. When a user clicks a thumbnail, a JavaScript function sends a request to the `/select_glasses` endpoint on the server, telling it which glasses to use for the overlay. This allows the user to change glasses in real-time without reloading the page.
 
-## Setup Instructions 🚀
+## Setup Instructions 
 
 ### 1. Project Structure
 
 Ensure your project directory is organized as follows:
 
+```markdown
 /virtual_try_on_project
 |-- run_script.py
 |-- /glasses
@@ -51,7 +52,7 @@ You'll need to install the required Python libraries. Open your terminal or comm
 pip install Flask numpy opencv-python
 ```
 
-### 3. Running the Application 🖥️
+### 3. Running the Application 
 
 1. Make sure your webcam isn't being used by any other applications.
 2. Navigate to your project's root directory in the terminal.
