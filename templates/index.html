@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Virtual Try-On</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background-color: #f0f0f0; }
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+        .video-box { border: 2px solid #333; margin-bottom: 20px; }
+        .glasses-selection { display: flex; justify-content: center; gap: 10px; }
+        .glasses-thumbnail { width: 100px; height: 50px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.3s; }
+        .glasses-thumbnail:hover { border-color: #007BFF; }
+        .glasses-thumbnail.active { border-color: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Virtual Glasses Try-On</h1>
+        <div class="video-box">
+            <img id="videoFeed" src="{{ url_for('video_feed') }}" width="100%" />
+        </div>
+
+        <h3>Select Glasses</h3>
+        <div class="glasses-selection">
+            {% for file in glasses_files %}
+                <img
+                    src="{{ url_for('static', filename=file) }}"
+                    class="glasses-thumbnail"
+                    data-index="{{ loop.index0 }}"
+                />
+            {% endfor %}
+        </div>
+        <hr>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Highlight the first thumbnail on page load
+            $('.glasses-thumbnail').first().addClass('active');
+
+            $('.glasses-thumbnail').on('click', function() {
+                var index = $(this).data('index');
+
+                // Send selected index to the Flask backend
+                $.post('/select_glasses', { index: index }, function(response) {
+                    console.log(response);
+                    // Update active class
+                    $('.glasses-thumbnail').removeClass('active');
+                    $('[data-index="' + index + '"]').addClass('active');
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
