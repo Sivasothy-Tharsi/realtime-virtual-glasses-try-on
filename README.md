@@ -38,6 +38,7 @@ Ensure your project directory is organized as follows:
 |   |-- /glasses
 |       |-- glasses1.png
 |       |-- glasses2.png
+```
 
 -   **`run_script.py`**: The main Python application.
 -   **`/glasses`**: A folder containing the glasses images with transparent backgrounds. This is used by the backend.
