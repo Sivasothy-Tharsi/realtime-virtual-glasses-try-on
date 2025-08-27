@@ -9,6 +9,8 @@ The application follows a **client-server architecture**.
 * **Frontend (Client)**: A web browser that displays a live video feed and a set of glasses thumbnails. It handles user interactions, like selecting a different pair of glasses or uploading a new image.
 * **Backend (Server)**: A Flask application that runs on a local machine. It manages the webcam stream, performs all the heavy image processing, and serves the web page.
 
+![Architecture Diagram](./images/architecture.png)
+
 ### How it Works
 
 The system's functionality is divided between the frontend and the backend to ensure a smooth, real-time experience.
