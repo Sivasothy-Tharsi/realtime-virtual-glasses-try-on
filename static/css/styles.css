@@ -1,0 +1,241 @@
+html,
+body {
+  overflow-x: hidden;
+}
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: #fff;
+  margin: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, #000428, #004e92);
+  color: white;
+  padding: 20px;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.hero.hidden {
+  display: none;
+}
+
+.hero h1 {
+  font-size: 5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+
+  /* Gradient text */
+  background: linear-gradient(to right, #00d4ff, #007bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin: 20px 0;
+  max-width: 600px;
+}
+
+.btn-start {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: linear-gradient(to right, #00d4ff, #007bff);
+  border: none;
+  color: white;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.btn-start:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#tryon-section {
+  display: none;
+  padding: 30px 20px;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+#tryon-section.show {
+  display: block;
+  opacity: 1;
+}
+
+.header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+  padding: 12px;
+}
+
+.app-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+
+  background: linear-gradient(to right, #00d4ff, #007bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-exit {
+  background: linear-gradient(to right, #ff416c, #ff4b2b);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 15px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-exit:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#video-container {
+  height: 900px;
+  max-height: 70vh;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+#videoFeed {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* maintain aspect ratio */
+  border-radius: 10px;
+}
+
+.video-placeholder {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+#glasses-gallery {
+  justify-content: center;
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.glasses-item {
+  position: relative;
+  margin: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.glasses-item small {
+  display: block;
+  text-align: center;
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.glasses-thumbnail {
+  width: 100px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 3px solid transparent;
+  transition: all 0.3s;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px;
+}
+
+.glasses-thumbnail:hover {
+  transform: scale(1.1);
+  border-color: #007bff;
+}
+
+.glasses-thumbnail.selected {
+  border-color: #00d4ff;
+  box-shadow: 0 0 20px #7f00ff;
+}
+
+.gallery-title {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+@media (max-width: 992px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .app-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .btn-start {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+
+  .app-title {
+    font-size: 1.5rem;
+  }
+
+  .glasses-thumbnail {
+    width: 80px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .hero p {
+    font-size: 0.9rem;
+  }
+
+  .header-controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .glasses-thumbnail {
+    width: 70px;
+    height: 35px;
+  }
+}

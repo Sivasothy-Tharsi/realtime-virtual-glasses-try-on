@@ -5,6 +5,7 @@ import os
 from flask import Flask, render_template, Response, request
 
 app = Flask(__name__)
+camera = None
 
 
 # List of glasses images for the backend
@@ -58,14 +59,15 @@ def overlay_with_alpha(background, foreground, x_offset, y_offset):
 
 
 def generate_frames():
-    global current_glasses_img
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        print("Error: Could not open webcam.")
-        return
+    global current_glasses_img, camera
+    if camera is None:
+        camera = cv2.VideoCapture(0)
+        if not camera.isOpened():
+            print("Error: Could not open webcam.")
+            return
 
     while True:
-        success, frame = cap.read()
+        success, frame = camera.read()
         if not success:
             break
         frame = cv2.flip(frame, 1)
@@ -78,8 +80,10 @@ def generate_frames():
         for (x, y, w, h) in faces:
             if current_glasses_img is not None:
                 glasses_width = int(w * 0.8)
-                resized_glasses = cv2.resize(current_glasses_img, (glasses_width, int(
-                    current_glasses_img.shape[0] * (glasses_width / current_glasses_img.shape[1]))))
+                resized_glasses = cv2.resize(
+                    current_glasses_img,
+                    (glasses_width, int(current_glasses_img.shape[0] * (glasses_width / current_glasses_img.shape[1])))
+                )
 
                 left_eye = (x + int(w * 0.3), y + int(h * 0.4))
                 right_eye = (x + int(w * 0.7), y + int(h * 0.4))
@@ -112,12 +116,26 @@ def video_feed():
 def select_glasses():
     global current_glasses_img
     index = int(request.form['index'])
+
+    if index == -1:
+        # No glasses → clear selection
+        current_glasses_img = None
+        return "No glasses selected", 200
+
     if 0 <= index < len(FRONTEND_GLASSES_PATHS):
         current_glasses_img = cv2.imread(FRONTEND_GLASSES_PATHS[index], cv2.IMREAD_UNCHANGED)
         if current_glasses_img is None:
             return "Error: Could not load glasses image.", 400
         return "Success", 200
     return "Invalid index", 400
+@app.route('/stop_camera', methods=['POST'])
+def stop_camera():
+    global camera
+    if camera is not None:
+        camera.release()
+        camera = None
+        print("Camera released.")
+    return "Camera stopped", 200
 
 
 if __name__ == '__main__':

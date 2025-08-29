@@ -1,57 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Virtual Try-On</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; background-color: #f0f0f0; }
-        .container { max-width: 800px; margin: auto; padding: 20px; }
-        .video-box { border: 2px solid #333; margin-bottom: 20px; }
-        .glasses-selection { display: flex; justify-content: center; gap: 10px; }
-        .glasses-thumbnail { width: 100px; height: 50px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.3s; }
-        .glasses-thumbnail:hover { border-color: #007BFF; }
-        .glasses-thumbnail.active { border-color: #28a745; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Virtual Glasses Try-On</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Virtual Glasses Try-On</h1>
-        <div class="video-box">
-            <img id="videoFeed" src="{{ url_for('video_feed') }}" width="100%" />
-        </div>
+  <section class="hero" id="intro-section">
+    <h1>VITON</h1>
+    <h2>Virtual Glasses Try-On</h2>
+    <p>See how you look in different glasses — instantly with your webcam. No downloads required!</p>
+    <button class="btn btn-start" onclick="startApp()">
+      <i class="fas fa-camera me-2"></i>Start Trying On
+    </button>
+  </section>
 
-        <h3>Select Glasses</h3>
-        <div class="glasses-selection">
-            {% for file in glasses_files %}
-                <img
-                    src="{{ url_for('static', filename=file) }}"
-                    class="glasses-thumbnail"
-                    data-index="{{ loop.index0 }}"
-                />
-            {% endfor %}
-        </div>
-        <hr>
+  <section id="tryon-section" class="container-fluid">
+    <div class="header-controls">
+      <h2 class="app-title">Virtual Glasses Try-On</h2>
+      <button class="btn btn-exit" onclick="exitApp()">
+        <i class="fas fa-arrow-left me-2"></i>Exit Try-On
+      </button>
     </div>
+    
+    <div class="row">
+      <div class="col-lg-8 mb-4">
+        <div id="video-container" class="p-3">
+          <div id="loading-spinner" style="display: none; justify-content:center; align-items:center; height:100%; color:white;">
+            Loading camera...
+          </div>
+          <img id="videoFeed" width="100%" class="rounded" />
+        </div>
+      </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Highlight the first thumbnail on page load
-            $('.glasses-thumbnail').first().addClass('active');
+      <div class="col-lg-4">
+        <h4 class="gallery-title">Select Your Glasses</h4>
+        <div id="glasses-gallery" class="d-flex flex-wrap justify-content-center">
+  <div class="glasses-item" onclick="selectGlasses(-1, this)">
+    <div class="glasses-thumbnail d-flex justify-content-center align-items-center text-danger">
+      <i class="fas fa-times"></i>
+    </div>
+    <small>No Glasses</small>
+  </div>
+  {% for file in glasses_files %}
+  <div class="glasses-item" onclick="selectGlasses('{{ loop.index0 }}', this)">
+    <img src="{{ url_for('static', filename=file) }}" class="glasses-thumbnail" data-index="{{ loop.index0 }}" />
+    <small>{{ file.split('/')[-1].split('.')[0] | replace('_', ' ') }}</small> <!-- Glasses name -->
+  </div>
+  {% endfor %}
+</div>
 
-            $('.glasses-thumbnail').on('click', function() {
-                var index = $(this).data('index');
+      </div>
+    </div>
+  </section>
 
-                // Send selected index to the Flask backend
-                $.post('/select_glasses', { index: index }, function(response) {
-                    console.log(response);
-                    // Update active class
-                    $('.glasses-thumbnail').removeClass('active');
-                    $('[data-index="' + index + '"]').addClass('active');
-                });
-            });
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+function startApp() {
+  document.getElementById('intro-section').classList.add('hidden');
+  const tryonSection = document.getElementById('tryon-section');
+  tryonSection.classList.add('show');
+  tryonSection.scrollIntoView({ behavior: 'smooth' });
+  const videoFeed = document.getElementById('videoFeed');
+  const spinner = document.getElementById('loading-spinner');
+  spinner.style.display = 'flex';
+  videoFeed.style.display = 'none';
+  videoFeed.onload = () => {
+    spinner.style.display = 'none';
+    videoFeed.style.display = 'block';
+  };
+  videoFeed.src = "/video_feed";
+}
 
-        });
-    </script>
+function exitApp() {
+  $.post('/stop_camera', {}, function(response) {
+    console.log(response);
+  });
+  document.getElementById('tryon-section').classList.remove('show');
+  const introSection = document.getElementById('intro-section');
+  introSection.classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('videoFeed').src = "";
+}
+
+function selectGlasses(index, element) {
+  document.querySelectorAll('.glasses-thumbnail').forEach(item => {
+    item.classList.remove('selected');
+  });
+  element.querySelector('.glasses-thumbnail').classList.add('selected');
+  $.post('/select_glasses', { index: index }, function(response) {
+    console.log(response);
+  });
+}
+  </script>
 </body>
 </html>
